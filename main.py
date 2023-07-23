@@ -1,13 +1,15 @@
+import os
 import streamlit as st
+from dotenv import load_dotenv
+
 from utils import transcribe_audio, summarize_transcript
 import theme
 
-
-
+# Load environment variables from .env file before importing any other modules
+load_dotenv()  
 
 # Streamlit app
 st.set_page_config(**theme.page_config)
-
 
 title = """
     <h1 style="color:#32CD32; font-family:sans-serif;">🎙️ Audio Transcription and Summarization 🎙️</h1>
@@ -15,11 +17,12 @@ title = """
 st.markdown(title, unsafe_allow_html=True)
 st.write("Upload an audio file, transcribe it using Whisper, and summarize the transcription using your selected model.")
 
-api_key = st.text_input("Enter your OpenAI API key:", type="password")
+api_key = os.environ.get('OPENAI_API_KEY') or st.text_input("Enter your OpenAI API key:", type="password")
+
 models = ["gpt-3.5-turbo", "gpt-3.5-turbo-16k", "gpt-4-0613"]
 model = st.selectbox("Select a model:", models)
 
-uploaded_audio = st.file_uploader("Upload an audio file", type=['m4a', 'mp3', 'webm', 'mp4', 'mpga', 'wav', 'mpeg'], accept_multiple_files=False)
+uploaded_audio = st.file_uploader("Upload an audio file", type=['aac', 'm4a', 'mp3', 'webm', 'mp4', 'mpga', 'wav', 'mpeg'], accept_multiple_files=False)
 
 custom_prompt = None
 
