@@ -35,7 +35,7 @@ def transcribe_audio(api_key, audio_file):
             temp_audio_file.seek(0)  # Move the file pointer to the beginning of the file
             
             # Transcribe the temporary audio file
-            transcript = openai.Audio.translate("whisper-1", temp_audio_file)
+            transcript = openai.Audio.transcribe("whisper-1", temp_audio_file)
 
     return transcript
 
