@@ -74,7 +74,7 @@ def call_gpt_streaming(api_key,prompt, model):
 # Create a function to summarize the transcript using a custom prompt
 def summarize_transcript(api_key, transcript, model, custom_prompt=None):
     openai.api_key = api_key
-    prompt = f"Please summarize the following audio transcription: {transcript}"
+    prompt = f"Please summarize the following audio transcription in the original language: {transcript}"
     if custom_prompt:
         prompt = f"{custom_prompt}\n\n{transcript}"
     

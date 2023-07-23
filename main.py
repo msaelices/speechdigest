@@ -26,7 +26,7 @@ uploaded_audio = st.file_uploader("Upload an audio file", type=['aac', 'm4a', 'm
 
 custom_prompt = None
 
-custom_prompt = st.text_input("Enter a custom prompt:", value = "Summarize the following audio transcription:")
+custom_prompt = st.text_input("Enter a custom prompt:", value = "Summarize the following audio transcription in the original language:")
 
 if st.button("Generate Summary"):
     if uploaded_audio:
