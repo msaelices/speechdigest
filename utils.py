@@ -24,7 +24,6 @@ def transcribe_audio(api_key, audio_file):
         aac_audio = AudioSegment.from_file(audio_file, format="aac")
         mp3_file = BytesIO()
         aac_audio.export(mp3_file, format="mp3")
-        st.markdown(f'{file_name}.{file_extension}')
         final_audio_file = UploadedFile(UploadedFileRec(id=0, name=f'{file_name}{file_extension}', type="audio/mp3", data=mp3_file.getvalue()))
         final_audio_file.seek(0)
 
@@ -79,7 +78,6 @@ def summarize_transcript(api_key, transcript, model, custom_prompt=None):
     if custom_prompt:
         prompt = f"{custom_prompt}\n\n{transcript}"
     
-
     response = openai.ChatCompletion.create(
         model=model,
         messages=[{"role": "user", "content": prompt}],
