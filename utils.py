@@ -1,16 +1,34 @@
 import openai
-from io import BytesIO
 import tempfile
 import os
 import streamlit as st
 
+from io import BytesIO
+from pydub import AudioSegment
+from streamlit.runtime.uploaded_file_manager import UploadedFileRec, UploadedFile
+
+
 # Create a function to transcribe audio using Whisper
 def transcribe_audio(api_key, audio_file):
     openai.api_key = api_key
-    with BytesIO(audio_file.read()) as audio_bytes:
-        # Get the extension of the uploaded file
-        file_extension = os.path.splitext(audio_file.name)[-1]
-        
+
+    # Get the extension of the uploaded file
+    file_name, file_extension = os.path.splitext(audio_file.name)
+
+    final_audio_file = audio_file
+
+    if audio_file.type == 'audio/aac':
+        st.markdown("Converting the aac audio file to mp3...")
+        file_extension = '.mp3'
+        audio_file.seek(0)
+        aac_audio = AudioSegment.from_file(audio_file, format="aac")
+        mp3_file = BytesIO()
+        aac_audio.export(mp3_file, format="mp3")
+        st.markdown(f'{file_name}.{file_extension}')
+        final_audio_file = UploadedFile(UploadedFileRec(id=0, name=f'{file_name}{file_extension}', type="audio/mp3", data=mp3_file.getvalue()))
+        final_audio_file.seek(0)
+
+    with BytesIO(final_audio_file.read()) as audio_bytes:
         # Create a temporary file with the uploaded audio data and the correct extension
         with tempfile.NamedTemporaryFile(delete=False, suffix=file_extension) as temp_audio_file:
             temp_audio_file.write(audio_bytes.read())
